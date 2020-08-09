@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+    <ExecutableDirectories>$(VC_ExecutablePath_x64_x86);$(VC_ExecutablePath_x64_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);%(AdditionalOptions)</ExecutableDirectories>
+    <AppOut>$(SolutionDir)_bin\$(Configuration)-$(Platform)</AppOut>
+    <LibOut>$(SolutionDir)_lib\$(Configuration)-$(Platform)</LibOut>
+    <IntDir>$(SolutionDir)_bin\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_USE_MATH_DEFINES;_UNICODE;UNICODE;_SCL_SECURE_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet Condition="'$(Platform)'=='Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatSpecificWarningsAsErrors>4388;4018;</TreatSpecificWarningsAsErrors>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <MinimalRebuild>false</MinimalRebuild>
+      <ExceptionHandling>Async</ExceptionHandling>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="AppOut">
+      <Value>$(AppOut)</Value>
+    </BuildMacro>
+    <BuildMacro Include="LibOut">
+      <Value>$(LibOut)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
