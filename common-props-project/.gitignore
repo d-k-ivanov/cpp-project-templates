@@ -1,5 +1,7 @@
-.vs\
-.idea\
-.vscode\
+# IDE
+.idea
+.vs
+.vscode 
+
 Thumbs.db
 *.vcxproj.user

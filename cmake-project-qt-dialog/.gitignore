@@ -7,6 +7,9 @@ build/
 _build/
 install/
 _install/
+out/
+_out/
+external
 
 # CMake related
 _deps

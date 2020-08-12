@@ -1,27 +1,45 @@
-# Perform LF normalization
-* text eol=lf
-*.vim eol=lf
-
-*.a binary
-*.aac binary
-*.ai binary
-*.bin binary
-*.chm binary
-*.class binary
-*.dll binary
-*.exe binary
-*.gif binary
-*.gpg binary
+# Archives
 *.gz binary
-*.hlp binary
-*.ico binary
+*.tar binary
+*.zip binary
+
+# Binaries
+*.bin binary
+*.exe binary
 *.jar binary
-*.jpg binary
-*.lib binary
-*.mp3 binary
 *.msi binary
-*.ogg binary
+
+# Bytecode
+*.class binary
+*.obj
+*.o
+*.pyd binary
+
+# Documents
+*.chm binary
+*.doc binary
+*.docx binary
+*.hlp binary
+*.pdf binary
+
+# Images
+*.ai binary
+*.gif binary
+*.jpg binary
+*.ico binary
 *.png binary
 *.psd binary
-*.spl binary
-*.sys binary
+
+# Libraries
+*.a binary
+*.dll binary
+*.dlyb binary
+*.lib binary
+
+# Misc
+*.gpg binary
+
+# Sounds
+*.aac binary
+*.mp3 binary
+*.ogg binary
