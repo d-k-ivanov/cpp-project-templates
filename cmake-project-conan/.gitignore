@@ -1,0 +1,36 @@
+# IDE
+.idea
+.vs
+.vscode
+
+# Build and Output folders
+build/
+_build/
+install/
+_install/
+out/
+_out/
+external
+_deps
+
+# CMake files
+# CMakeSettings.json
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# Conan files
+venv
+.conan
+conan.lock
+conanbuildinfo.txt
+conanbuildinfo.cmake
+conaninfo.txt
+graphinfo

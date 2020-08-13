@@ -1,0 +1,45 @@
+# Archives
+*.gz binary
+*.tar binary
+*.zip binary
+
+# Binaries
+*.bin binary
+*.exe binary
+*.jar binary
+*.msi binary
+
+# Bytecode
+*.class binary
+*.obj
+*.o
+*.pyd binary
+
+# Documents
+*.chm binary
+*.doc binary
+*.docx binary
+*.hlp binary
+*.pdf binary
+
+# Images
+*.ai binary
+*.gif binary
+*.jpg binary
+*.ico binary
+*.png binary
+*.psd binary
+
+# Libraries
+*.a binary
+*.dll binary
+*.dlyb binary
+*.lib binary
+
+# Misc
+*.gpg binary
+
+# Sounds
+*.aac binary
+*.mp3 binary
+*.ogg binary

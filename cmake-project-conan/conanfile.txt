@@ -1,0 +1,8 @@
+[requires]
+catch2/2.13.0
+fmt/7.0.1
+spdlog/1.7.0
+sqlite3/3.32.3
+
+[generators]
+cmake
