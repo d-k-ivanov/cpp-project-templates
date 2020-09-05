@@ -26,9 +26,9 @@ set_base_vars()
 fix_project_version()
 
 # Set additional project information
-set(COMPANY "Ormco")
-set(COPYRIGHT "Copyright (c) 2020 Ormco Corporation. All rights reserved.")
-set(IDENTIFIER "com.ormcodigital.devops.oas-tools")
+set(COMPANY "Dmitriy Ivanov")
+set(COPYRIGHT "Copyright (c) 2020 Dmitriy Ivanov. All rights reserved.")
+set(IDENTIFIER "com.divanov.project-name")
 
 include(Debug)
 cmake_get_cxx_compiler()
