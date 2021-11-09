@@ -30,7 +30,7 @@
             "BuildCommandArgs": "/m /v:normal",
             "CMakeCommandArgs": "${system.CMakeArgs}",
             "CTestCommandArgs": "",
-            "BuildDir": "${workspaceRoot}\\_build",
+            "BuildDir": "${workspaceRoot}\\_build"
         },
         {
             "CMakeVariables": [
