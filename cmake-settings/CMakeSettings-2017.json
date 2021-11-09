@@ -31,20 +31,6 @@
             "CMakeCommandArgs": "${system.CMakeArgs}",
             "CTestCommandArgs": "",
             "BuildDir": "${workspaceRoot}\\_build"
-        },
-        {
-            "CMakeVariables": [
-                {
-                    "name": "BUILD_SHARED_LIBS",
-                    "value": "",
-                    "type": "BOOL"
-                },
-                {
-                    "name": "BUILD_EXAMPLES",
-                    "value": "false",
-                    "type": "BOOL"
-                }
-            ]
         }
     ],
     "configurations": [
@@ -58,7 +44,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x64",
-            "variables": "${env.CMakeVariables}"
+            "variables": []
         },
         {
             "name": "x64-Release",
@@ -70,7 +56,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x64",
-            "variables": "${env.CMakeVariables}"
+            "variables": []
         },
         {
             "name": "x64-Debug",
@@ -82,7 +68,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x64",
-            "variables": "${env.CMakeVariables}"
+            "variables": []
         },
         {
             "name": "x86-Prod",
@@ -94,7 +80,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x86",
-            "variables": "${env.CMakeVariables}"
+            "variables": []
         },
         {
             "name": "x86-Release",
@@ -106,7 +92,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x86",
-            "variables": "${env.CMakeVariables}"
+            "variables": []
         },
         {
             "name": "x86-Debug",
@@ -118,7 +104,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x86",
-            "variables": "${env.CMakeVariables}"
+            "variables": []
         }
     ]
 }
