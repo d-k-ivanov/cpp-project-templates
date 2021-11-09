@@ -31,11 +31,25 @@
             "CMakeCommandArgs": "${system.CMakeArgs}",
             "CTestCommandArgs": "",
             "BuildDir": "${workspaceRoot}\\_build"
+        },
+        {
+            "CMakeVariables": [
+                {
+                    "name": "BUILD_SHARED_LIBS",
+                    "value": "",
+                    "type": "BOOL"
+                },
+                {
+                    "name": "BUILD_EXAMPLES",
+                    "value": "false",
+                    "type": "BOOL"
+                }
+            ]
         }
     ],
     "configurations": [
         {
-            "name": "x64-Release",
+            "name": "x64-Prod",
             "generator": "Ninja",
             "configurationType": "Release",
             "inheritEnvironments": [ "platform_x64", "system_Windows" ],
@@ -44,7 +58,19 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x64",
-            "variables": []
+            "variables": "${env.CMakeVariables}"
+        },
+        {
+            "name": "x64-Release",
+            "generator": "Ninja",
+            "configurationType": "RelWithDebInfo",
+            "inheritEnvironments": [ "platform_x64", "system_Windows" ],
+            "buildRoot": "${env.BuildDir}\\${name}",
+            "buildCommandArgs": "${env.BuildCommandArgs}",
+            "cmakeCommandArgs": "${env.CMakeCommandArgs}",
+            "ctestCommandArgs": "${env.CTestCommandArgs}",
+            "intelliSenseMode": "windows-msvc-x64",
+            "variables": "${env.CMakeVariables}"
         },
         {
             "name": "x64-Debug",
@@ -56,10 +82,10 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x64",
-            "variables": []
+            "variables": "${env.CMakeVariables}"
         },
         {
-            "name": "x86-Release",
+            "name": "x86-Prod",
             "generator": "Ninja",
             "configurationType": "Release",
             "inheritEnvironments": [ "platform_Win32", "system_Windows" ],
@@ -68,7 +94,19 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x86",
-            "variables": []
+            "variables": "${env.CMakeVariables}"
+        },
+        {
+            "name": "x86-Release",
+            "generator": "Ninja",
+            "configurationType": "RelWithDebInfo",
+            "inheritEnvironments": [ "platform_Win32", "system_Windows" ],
+            "buildRoot": "${env.BuildDir}\\${name}",
+            "buildCommandArgs": "${env.BuildCommandArgs}",
+            "cmakeCommandArgs": "${env.CMakeCommandArgs}",
+            "ctestCommandArgs": "${env.CTestCommandArgs}",
+            "intelliSenseMode": "windows-msvc-x86",
+            "variables": "${env.CMakeVariables}"
         },
         {
             "name": "x86-Debug",
@@ -80,7 +118,7 @@
             "cmakeCommandArgs": "${env.CMakeCommandArgs}",
             "ctestCommandArgs": "${env.CTestCommandArgs}",
             "intelliSenseMode": "windows-msvc-x86",
-            "variables": []
+            "variables": "${env.CMakeVariables}"
         }
     ]
 }
