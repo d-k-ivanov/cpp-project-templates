@@ -20,3 +20,10 @@ if(NOT TARGET project-name)
     add_custom_target(project-name)
     add_dependencies(project-name project-name)
 endif()
+
+# target_include_directories(project-name PRIVATE ${CONAN_INCLUDE_DIRS})
+target_link_libraries(project-name
+                        CONAN_PKG::fmt
+                        CONAN_PKG::spdlog
+                     )
+# target_link_libraries(project-name ${CONAN_LIBS})
