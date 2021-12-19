@@ -17,7 +17,7 @@ int main()
 
     auto monitor_counter = 0;
     const auto monitors = glfwGetMonitors(&monitor_counter);
-x
+
     for (auto i = 0; i < monitor_counter; ++i)
     {
         const auto name = glfwGetMonitorName(monitors[i]);

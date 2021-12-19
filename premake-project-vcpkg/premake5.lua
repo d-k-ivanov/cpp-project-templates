@@ -40,6 +40,8 @@ workspace "Solution"
     -- debugdir "%{prj.location}/%{cfg.architecture}/%{cfg.buildcfg}"
     -- objdir "!%{prj.location}/%{cfg.architecture}/%{cfg.buildcfg}/intermediate/%{prj.name}"
 
+    links { "glfw3" }
+
     filter "platforms:x86"
         architecture "x86"
 
@@ -71,31 +73,6 @@ workspace "Solution"
         runtime "Debug"
         symbols "On"
 
-
-    filter { "system:windows", "configurations:Debug" }
-        libdirs {
-            "vcpkg/installed/x64-windows/lib",
-            "vcpkg/installed/x64-windows-static/lib",
-        }
-
-    filter { "system:windows", "configurations:Release" }
-        libdirs {
-            "vcpkg/installed/x64-windows/debug/lib",
-            "vcpkg/installed/x64-windows-static/debug/lib",
-        }
-
-    filter { "system:linux", "configurations:Debug" }
-        libdirs {
-            "vcpkg/installed/x64-linux/lib",
-            "vcpkg/installed/x64-linux-static/lib",
-        }
-
-    filter { "system:linux", "configurations:Release" }
-        libdirs {
-            "vcpkg/installed/x64-linux/debug/lib",
-            "vcpkg/installed/x64-linux-static/debug/lib",
-        }
-
     filter "system:windows"
         cdialect "C17"
         cppdialect "C++20"
@@ -103,6 +80,32 @@ workspace "Solution"
         defaultplatform "x64"
         defines {"_CRT_NONSTDC_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS", "STRICT", "COMPILER_MSVC" }
         staticruntime "On"
+        includedirs
+            {
+                "vcpkg/installed/x64-windows/include",
+                "vcpkg/installed/x64-windows-static/include",
+            }
+
+    filter { "system:windows", "configurations:RelDebug" }
+        libdirs
+        {
+            "vcpkg/installed/x64-windows/lib",
+            "vcpkg/installed/x64-windows-static/lib",
+        }
+
+    filter { "system:windows", "configurations:Release" }
+        libdirs
+        {
+            "vcpkg/installed/x64-windows/lib",
+            "vcpkg/installed/x64-windows-static/lib",
+        }
+
+    filter { "system:windows", "configurations:Debug" }
+        libdirs
+        {
+            "vcpkg/installed/x64-windows/debug/lib",
+            "vcpkg/installed/x64-windows-static/debug/lib",
+        }
 
     filter "system:linux"
         cdialect "gnu17"
@@ -110,7 +113,35 @@ workspace "Solution"
         staticruntime "Off"
         defaultplatform "x64"
         linkoptions "-Wl,--no-undefined"
+        links { "dl", "pthread", "X11" }
         defines({ "LINUX", "_LINUX", "COMPILER_GCC", "POSIX" })
+
+        includedirs {
+            "vcpkg/installed/x64-linux/include",
+            "vcpkg/installed/x64-linux-static/include",
+        }
+
+
+    filter { "system:linux", "configurations:RelDebug" }
+        libdirs
+        {
+            "vcpkg/installed/x64-linux/lib",
+            "vcpkg/installed/x64-linux-static/lib",
+        }
+
+    filter { "system:linux", "configurations:Release" }
+        libdirs
+        {
+            "vcpkg/installed/x64-linux/lib",
+            "vcpkg/installed/x64-linux-static/lib",
+        }
+
+    filter { "system:linux", "configurations:Debug" }
+        libdirs
+        {
+            "vcpkg/installed/x64-linux/debug/lib",
+            "vcpkg/installed/x64-linux-static/debug/lib",
+        }
 
     filter "files:**.cpp or **.cxx or **.cc"
         strictaliasing "Level3"
