@@ -9,9 +9,11 @@ project "ProjectOne"
         "**.cpp",
     }
 
-    vpaths {
+    vpaths
+    {
         ["Headers/*"] = { "**.h", "**.hpp" },
-        ["Sources/*"] = {"**.c", "**.cpp"}
+        ["Sources/*"] = {"**.c", "**.cpp"},
+        ["Build/*"] = {"**.lua"}
     }
 
     filter ({})

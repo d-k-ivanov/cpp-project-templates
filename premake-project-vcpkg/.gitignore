@@ -1,0 +1,27 @@
+# Binaries
+**/bin/
+**/bin-int/
+
+# Visual Studio files and folder
+.vs/
+**.sln
+**.vcxproj
+**.vcxproj.filters
+**.vcxproj.user
+
+# VCPkg
+vcpkg
+
+# Makefile
+Makefile
+/**.make
+
+# CodeLite
+.codelite
+**.workspace
+**.project
+**.mk
+tags
+*.txt
+compile_flags.txt
+*.batch_build
