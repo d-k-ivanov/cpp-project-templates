@@ -10,7 +10,7 @@
 **.vcxproj.user
 
 # VCPkg
-vcpkg
+vcpkg/
 
 # Makefile
 Makefile
