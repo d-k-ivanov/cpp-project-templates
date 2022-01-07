@@ -105,6 +105,7 @@ project "Other"
         ".editorconfig",
         ".gitignore",
         "commit_now.ps1",
+        "conanfile.txt",
         "gen_solution.bat",
         "premake5.lua"
     }
