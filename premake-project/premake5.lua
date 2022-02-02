@@ -30,7 +30,7 @@ workspace "Solution"
     platforms { "x64", "x86"}
     warnings "Extra"
 
-    flags {"MultiProcessorCompile", "ShadowedVariables", "UndefinedIdentifiers"}
+    flags {"FatalWarnings" ,"MultiProcessorCompile", "ShadowedVariables", "UndefinedIdentifiers"}
 
     targetdir ("bin/%{prj.name}/%{cfg.buildcfg}-%{cfg.architecture}")
     debugdir ("bin/%{prj.name}/%{cfg.buildcfg}-%{cfg.architecture}")
@@ -88,7 +88,7 @@ workspace "Solution"
         linkoptions "-Wl,--no-undefined"
         defines({ "LINUX", "_LINUX", "COMPILER_GCC", "POSIX" })
 
-    filter "files:**.cpp or **.cxx or **.cc"
+    filter "files:**.c or **.cc or **.cpp or **.cxx"
         strictaliasing "Level3"
 
     filter({})

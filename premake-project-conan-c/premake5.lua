@@ -22,11 +22,13 @@ premake.override(premake.vstudio.sln2005, "projects", function(base, wks)
     base(wks)
 end)
 
+include("conanbuildinfo.premake.lua")
 
 workspace "Solution"
+    conan_basic_setup()
     startproject "ProjectOne"
 
-    configurations { "Debug", "Release", "RelDebug" }
+    configurations { "RelDebug", "Release", "Debug" }
     platforms { "x64", "x86"}
     warnings "Extra"
 
@@ -39,8 +41,6 @@ workspace "Solution"
     -- targetdir "%{prj.location}/%{cfg.architecture}/%{cfg.buildcfg}"
     -- debugdir "%{prj.location}/%{cfg.architecture}/%{cfg.buildcfg}"
     -- objdir "!%{prj.location}/%{cfg.architecture}/%{cfg.buildcfg}/intermediate/%{prj.name}"
-
-    links { "glfw3" }
 
     filter "platforms:x86"
         architecture "x86"
@@ -55,13 +55,13 @@ workspace "Solution"
         defines({"COMPILER_MSVC64","WIN64"})
 
     filter "configurations:RelDebug"
-        defines "NDEBUG"
+        defines {"NDEBUG", "RELEASE", "_RELEASE"}
         optimize "Debug"
         runtime "Release"
         symbols "On"
 
     filter "configurations:Release"
-        defines "NDEBUG"
+        defines {"NDEBUG", "RELEASE", "_RELEASE"}
         flags "LinkTimeOptimization"
         optimize "Full"
         runtime "Release"
@@ -80,32 +80,7 @@ workspace "Solution"
         defaultplatform "x64"
         defines {"_CRT_NONSTDC_NO_WARNINGS", "_CRT_SECURE_NO_WARNINGS", "STRICT", "COMPILER_MSVC" }
         staticruntime "On"
-        includedirs
-            {
-                "vcpkg/installed/x64-windows/include",
-                "vcpkg/installed/x64-windows-static/include",
-            }
 
-    filter { "system:windows", "configurations:RelDebug" }
-        libdirs
-        {
-            "vcpkg/installed/x64-windows/lib",
-            "vcpkg/installed/x64-windows-static/lib",
-        }
-
-    filter { "system:windows", "configurations:Release" }
-        libdirs
-        {
-            "vcpkg/installed/x64-windows/lib",
-            "vcpkg/installed/x64-windows-static/lib",
-        }
-
-    filter { "system:windows", "configurations:Debug" }
-        libdirs
-        {
-            "vcpkg/installed/x64-windows/debug/lib",
-            "vcpkg/installed/x64-windows-static/debug/lib",
-        }
 
     filter "system:linux"
         cdialect "gnu17"
@@ -113,51 +88,33 @@ workspace "Solution"
         staticruntime "Off"
         defaultplatform "x64"
         linkoptions "-Wl,--no-undefined"
-        links { "dl", "pthread", "X11" }
         defines({ "LINUX", "_LINUX", "COMPILER_GCC", "POSIX" })
-
-        includedirs {
-            "vcpkg/installed/x64-linux/include",
-            "vcpkg/installed/x64-linux-static/include",
-        }
-
-
-    filter { "system:linux", "configurations:RelDebug" }
-        libdirs
-        {
-            "vcpkg/installed/x64-linux/lib",
-            "vcpkg/installed/x64-linux-static/lib",
-        }
-
-    filter { "system:linux", "configurations:Release" }
-        libdirs
-        {
-            "vcpkg/installed/x64-linux/lib",
-            "vcpkg/installed/x64-linux-static/lib",
-        }
-
-    filter { "system:linux", "configurations:Debug" }
-        libdirs
-        {
-            "vcpkg/installed/x64-linux/debug/lib",
-            "vcpkg/installed/x64-linux-static/debug/lib",
-        }
 
     filter "files:**.c or **.cc or **.cpp or **.cxx"
         strictaliasing "Level3"
 
     filter({})
 
-include "ProjectOne"
+include "BezierCurve"
 
 project "Other"
     kind "None"
+
 
     files
     {
         ".editorconfig",
         ".gitignore",
         "commit_now.ps1",
+        "conanfile.txt",
         "gen_solution.bat",
         "premake5.lua"
     }
+
+    vpaths
+    {
+        ["Build/*"] = { "**.lua", "**.bat", "conanfile.txt", "conanbuildinfo.premake.lua" },
+        ["Git/*"]   = { ".gitignore", "commit_now.ps1", ".editorconfig" }
+    }
+
+    filter ({})

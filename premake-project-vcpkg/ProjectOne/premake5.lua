@@ -5,15 +5,23 @@ project "ProjectOne"
 
     files
     {
-        "**.h",
+        "**.c",
+        "**.cc",
         "**.cpp",
+        "**.cxx",
+        "**.h",
+        "**.hpp",
+        "**.hxx",
+        "**.lua",
+        "**.md",
     }
 
     vpaths
     {
-        ["Headers/*"] = { "**.h", "**.hpp" },
-        ["Sources/*"] = {"**.c", "**.cpp"},
-        ["Build/*"] = {"**.lua"}
+        ["Archive/*"]   = {"**.md"},
+        ["Build/*"]     = {"**.lua"},
+        ["Headers/*"]   = { "**.h", "**.hpp" },
+        ["Sources/*"]   = {"**.c", "**.cpp"},
     }
 
     filter ({})

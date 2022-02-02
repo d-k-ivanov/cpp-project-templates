@@ -1,7 +1,7 @@
 project "ProjectOne"
     kind "ConsoleApp"
-    language "C++"
-    cppdialect "C++20"
+    language "C"
+    cdialect  "C17"
 
     files
     {
