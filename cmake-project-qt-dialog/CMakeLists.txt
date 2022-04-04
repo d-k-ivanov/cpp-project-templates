@@ -14,8 +14,8 @@ include(Macros)
 fix_project_version()
 
 # Set additional project information
-set(COMPANY "Dmitriy Ivanov")
-set(COPYRIGHT "Copyright (c) 2021 Dmitriy Ivanov. All rights reserved.")
+set(COMPANY "Dmitry Ivanov")
+set(COPYRIGHT "Copyright (c) 2021 Dmitry Ivanov. All rights reserved.")
 set(IDENTIFIER "io.github.d-k-ivanov.InitQTDialog")
 
 #set_property(GLOBAL PROPERTY USE_FOLDERS ON)
