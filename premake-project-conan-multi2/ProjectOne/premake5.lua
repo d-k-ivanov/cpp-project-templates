@@ -1,0 +1,2 @@
+ConsoleProject("ProjectOne")
+SetWarningLevelHigh()
