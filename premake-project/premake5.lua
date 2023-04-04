@@ -106,3 +106,23 @@ project "Other"
         "gen_solution.bat",
         "premake5.lua"
     }
+
+-- Clean Action Implementation
+newaction {
+    trigger = "clean",
+    description = "Remove all binaries and intermediate binaries, and vs files.",
+    execute = function()
+        print("Removing binaries")
+        os.rmdir("./bin")
+        print("Removing intermediate binaries")
+        os.rmdir("./bin-int")
+        print("Removing Visual Studio folder")
+        os.rmdir("./.vs")
+        print("Removing project files")
+        os.remove("**.sln")
+        os.remove("**.vcxproj")
+        os.remove("**.vcxproj.filters")
+        os.remove("**.vcxproj.user")
+        print("Done")
+    end
+}
