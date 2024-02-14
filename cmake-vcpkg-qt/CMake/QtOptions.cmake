@@ -32,7 +32,6 @@ function(qt_deploy TARGET_NAME)
                 $<IF:$<CONFIG:Debug>,"${WINDEPLOYQT_EXECUTABLE_DEBUG}","${WINDEPLOYQT_EXECUTABLE}">
                 $<IF:$<CONFIG:Debug>,--debug,--release>
                 --verbose 0
-                --no-compiler-runtime
                 --dir "$<TARGET_FILE_DIR:${TARGET_NAME}>"
                 --no-translations
                 \"$<TARGET_FILE:${TARGET_NAME}>\"
@@ -46,7 +45,6 @@ function(qt_deploy TARGET_NAME)
                 $<IF:$<CONFIG:Debug>,"${WINDEPLOYQT_EXECUTABLE_DEBUG}","${WINDEPLOYQT_EXECUTABLE}">
                 $<IF:$<CONFIG:Debug>,--debug,--release>
                 --verbose 0
-                --no-compiler-runtime
                 --dir "$<TARGET_FILE_DIR:${TARGET_NAME}>/winqt"
                 --no-translations
                 \"$<TARGET_FILE:${TARGET_NAME}>\"
@@ -57,7 +55,7 @@ function(qt_deploy TARGET_NAME)
             install(
                 DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>/winqt/"
                 COMPONENT ${TARGET_NAME}
-                DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                DESTINATION "."
             )
 
             add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -69,7 +67,7 @@ function(qt_deploy TARGET_NAME)
             install(
                 DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>/qt.conf"
                 COMPONENT ${TARGET_NAME}
-                DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                DESTINATION "."
             )
         endif()
     endif(WIN32)
@@ -118,7 +116,7 @@ function(qt5_deploy TARGET_NAME)
             install(
                 DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>/winqt/"
                 COMPONENT ${TARGET_NAME}
-                DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                DESTINATION "."
             )
 
             add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
@@ -130,7 +128,7 @@ function(qt5_deploy TARGET_NAME)
             install(
                 DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>/qt.conf"
                 COMPONENT ${TARGET_NAME}
-                DESTINATION "${CMAKE_INSTALL_BINDIR}"
+                DESTINATION "."
             )
         endif()
     endif(WIN32)

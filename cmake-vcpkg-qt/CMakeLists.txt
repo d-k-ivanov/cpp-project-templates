@@ -84,6 +84,7 @@ add_dependencies(${PROJECT_NAME} always_run_target)
 # Use WinMain as a default endpoint on Windows
 if(WIN32)
     set_property(TARGET ${PROJECT_NAME} PROPERTY WIN32_EXECUTABLE "$<IF:$<CONFIG:Release>,TRUE,${CMAKE_WIN32_EXECUTABLE}>")
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 endif()
 
 qt_automoc_properties(TARGET ${PROJECT_NAME})
@@ -124,8 +125,56 @@ target_link_libraries(
     Qt::Widgets
 )
 
+install(
+    TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Targets
+    COMPONENT ${PROJECT_NAME}
+    LIBRARY DESTINATION "."
+    ARCHIVE DESTINATION "."
+    RUNTIME DESTINATION "."
+)
+
 if(MSVC)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
+    install(FILES $<TARGET_PDB_FILE:${PROJECT_NAME}> COMPONENT ${PROJECT_NAME} DESTINATION ".")
+    set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
+    include(InstallRequiredSystemLibraries)
+    install(CODE "set(TARGET_FILE \"$<TARGET_FILE:${PROJECT_NAME}>\")" COMPONENT ${PROJECT_NAME})
+
+    foreach(lib ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS})
+        get_filename_component(filename "${lib}" NAME)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            COMMAND "${CMAKE_COMMAND}" -E copy_if_different "${lib}" \"$<TARGET_FILE_DIR:${PROJECT_NAME}>\"
+        )
+        install(FILES "${lib}" COMPONENT ${PROJECT_NAME} DESTINATION ".")
+    endforeach()
+
+    install(
+        CODE [[
+            file(
+                GET_RUNTIME_DEPENDENCIES
+                RESOLVED_DEPENDENCIES_VAR RES_DEP
+                UNRESOLVED_DEPENDENCIES_VAR UNRES_DEP
+                CONFLICTING_DEPENDENCIES_PREFIX CONF_DEP
+                PRE_EXCLUDE_REGEXES "api-ms-*"
+                POST_EXCLUDE_REGEXES ".*system32.*\\.dll"
+                EXECUTABLES "${TARGET_FILE}"
+            )
+            foreach(dep ${RES_DEP})
+                file(
+                    INSTALL
+                    DESTINATION "${CMAKE_INSTALL_PREFIX}"
+                    TYPE SHARED_LIBRARY
+                    FOLLOW_SYMLINK_CHAIN
+                    FILES ${dep}
+                )
+            endforeach()
+
+            foreach(dep ${UNRES_DEP})
+                message(WARNING "Dependency not found: ${dep}")
+            endforeach()
+        ]]
+        COMPONENT ${PROJECT_NAME}
+    )
 endif()
 
 add_subdirectory(CPack)
