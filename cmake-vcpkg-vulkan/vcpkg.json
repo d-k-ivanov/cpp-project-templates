@@ -1,0 +1,13 @@
+{
+    "dependencies": [
+        {
+            "name": "glfw3"
+        },
+        {
+            "name": "glm"
+        },
+        {
+            "name": "vulkan"
+        }
+    ]
+}
