@@ -19,6 +19,7 @@ include(Functions)
 project(${PROJECT_NAME})
 
 set(EXE_PLATFORM_KEYWORD "")
+
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
     set(EXE_PLATFORM_KEYWORD "")
 elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
@@ -26,13 +27,14 @@ elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
 endif()
 
 set(SOURCE_FILES
-    ## Main
+
+    # # Main
     src/main.cpp
 
     src/SomeSourceFile.cpp
     src/SomeHeaderFile.h
 
-    ## Shaders
+    # # Shaders
     resources/shaders/SomeFragmentShader.frag
     resources/shaders/VertexShader.vert
 )
@@ -50,33 +52,56 @@ add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_link_libraries(
     ${PROJECT_NAME}
-        assimp::assimp
-        glad::glad
-        glfw
-        imgui::imgui
-        OpenGL::GL
+    assimp::assimp
+    glad::glad
+    glfw
+    imgui::imgui
+    OpenGL::GL
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${Stb_INCLUDE_DIR})
 
-if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/dummy")
-    message(FATAL_ERROR "\"${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/dummy\" exists, remove it!")
-endif()
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 
-add_custom_target(
-    always_run_target ALL
-    DEPENDS
+if(isMultiConfig)
+    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/dummy")
+        message(FATAL_ERROR "\"${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/dummy\" exists, remove it!")
+    endif()
+
+    add_custom_target(
+        always_run_target ALL
+        DEPENDS
         "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/dummy" # fake! ensure we run!
-)
+    )
 
-add_custom_command(
-    OUTPUT
+    add_custom_command(
+        OUTPUT
         "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/dummy" # fake! ensure we run!
         "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/resources"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/resources"
         "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/resources"
-)
+    )
+else()
+    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/dummy")
+        message(FATAL_ERROR "\"${CMAKE_CURRENT_BINARY_DIR}/dummy\" exists, remove it!")
+    endif()
+
+    add_custom_target(
+        always_run_target ALL
+        DEPENDS
+        "${CMAKE_CURRENT_BINARY_DIR}/dummy" # fake! ensure we run!
+    )
+
+    add_custom_command(
+        OUTPUT
+        "${CMAKE_CURRENT_BINARY_DIR}/dummy" # fake! ensure we run!
+        "${CMAKE_CURRENT_BINARY_DIR}/resources"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/resources"
+        "${CMAKE_CURRENT_BINARY_DIR}/resources"
+    )
+endif()
 
 if(MSVC)
     set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})

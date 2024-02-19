@@ -54,25 +54,49 @@ set(SOURCE_FILES
 )
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_FILES})
 
-# Dummy target to ensure that resources are up-to-date
-if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy")
-    message(FATAL_ERROR "\"${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy\" exists, remove it!")
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+if(isMultiConfig)
+    # Dummy target to ensure that resources are up-to-date
+    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy")
+        message(FATAL_ERROR "\"${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy\" exists, remove it!")
+    endif()
+
+    add_custom_target(
+        always_run_target ALL
+        DEPENDS
+        "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy" # fake! ensure we run!
+    )
+
+    add_custom_command(
+        OUTPUT
+        "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy" # fake! ensure we run!
+        "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Resources"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/Resources"
+        "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Resources"
+    )
+else()
+    # Dummy target to ensure that resources are up-to-date
+    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}//Dummy")
+        message(FATAL_ERROR "\"${CMAKE_CURRENT_BINARY_DIR}/Dummy\" exists, remove it!")
+    endif()
+
+    add_custom_target(
+        always_run_target ALL
+        DEPENDS
+        "${CMAKE_CURRENT_BINARY_DIR}/Dummy" # fake! ensure we run!
+    )
+
+    add_custom_command(
+        OUTPUT
+        "${CMAKE_CURRENT_BINARY_DIR}/Dummy" # fake! ensure we run!
+        "${CMAKE_CURRENT_BINARY_DIR}/Resources"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/Resources"
+        "${CMAKE_CURRENT_BINARY_DIR}/Resources"
+    )
 endif()
-
-add_custom_target(
-    always_run_target ALL
-    DEPENDS
-    "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy" # fake! ensure we run!
-)
-
-add_custom_command(
-    OUTPUT
-    "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Dummy" # fake! ensure we run!
-    "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Resources"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_CURRENT_SOURCE_DIR}/Resources"
-    "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/Resources"
-)
 
 find_package(Qt6Core CONFIG REQUIRED)
 find_package(Qt6Gui CONFIG REQUIRED)
