@@ -19,5 +19,5 @@ else
         python.exe -m pip install --upgrade conan
     }
     conan remove --locks
-    conan install . -pr .\profiles\vs2019-x64 --build=missing
+    conan install . -pr .\profiles\vs2022-x64 --build=missing
 }
