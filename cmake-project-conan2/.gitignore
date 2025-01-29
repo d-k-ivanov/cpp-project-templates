@@ -1,0 +1,28 @@
+# Ide files
+.idea/
+.vs/
+.vscode/
+
+# Build files
+build/
+cmake-build-*/
+
+# Conan
+**/conan-*
+
+# Cache
+.DS_Store
+
+# Python
+__pycache__/*
+.venv/
+*.pyc
+venv/
+
+# CMake
+**/Makefile
+**/CMakeFiles
+**/CMakeCache.txt
+**/cmake_install.cmake
+CMakeUserPresets.json
+CMakePresets.json
