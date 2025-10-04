@@ -74,11 +74,6 @@ add_executable(sample::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 add_dependencies(${PROJECT_NAME} always_run_target2)
 
-# Use WinMain as a default endpoint on Windows
-if(WIN32)
-    set_property(TARGET ${PROJECT_NAME} PROPERTY WIN32_EXECUTABLE "$<IF:$<CONFIG:Release>,TRUE,${CMAKE_WIN32_EXECUTABLE}>")
-endif()
-
 # Enable PDB files in the Release configuration and a couple of useful flags
 if(MSVC)
     target_compile_options(${PROJECT_NAME} PUBLIC "/Zc:__cplusplus")
