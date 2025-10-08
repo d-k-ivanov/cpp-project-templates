@@ -260,6 +260,7 @@ elseif(UNIX AND NOT APPLE)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND "${CMAKE_COMMAND}"
         -DCMAKE_CURRENT_BINARY_DIR="$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+        -DTARGET_PROJECT_NAME="${PROJECT_NAME}"
         -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FixBuildRpath.cmake"
         COMMENT "Fixing RPATH for copied libraries in build directory"
     )
