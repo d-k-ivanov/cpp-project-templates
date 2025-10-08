@@ -256,70 +256,51 @@ elseif(UNIX AND NOT APPLE)
         COMMENT "Copying Qt plugins to build directory"
     )
 
-    # Wrapper script to set environment variables and run the app
-    configure_file(
-        "${CMAKE_CURRENT_SOURCE_DIR}/resources/run_app.sh.in"
-        "${CMAKE_CURRENT_BINARY_DIR}/run_app.sh"
-        @ONLY
-    )
+    # Collect build RPATH
+    set(BUILD_RPATH_LIST "$ORIGIN")
 
-    # Copy the wrapper script to the target directory and make it executable
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND "${CMAKE_COMMAND}" -E copy
-        "${CMAKE_CURRENT_BINARY_DIR}/run_app.sh"
-        "$<TARGET_FILE_DIR:${PROJECT_NAME}>/run_app.sh"
-        COMMAND chmod +x "$<TARGET_FILE_DIR:${PROJECT_NAME}>/run_app.sh"
-        COMMENT "Creating wrapper script for ${PROJECT_NAME}"
-    )
-
-    # Set RPATH for the executable to look for libraries in the same directory
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        # BUILD_RPATH "$ORIGIN"
-        INSTALL_RPATH "$ORIGIN:$ORIGIN/lib:$ORIGIN/plugins"
-        BUILD_RPATH_USE_ORIGIN TRUE
-        INSTALL_RPATH_USE_LINK_PATH FALSE
-        BUILD_WITH_INSTALL_RPATH FALSE
-        SKIP_BUILD_RPATH FALSE
-        CMAKE_SKIP_INSTALL_RPATH FALSE
-    )
-
-    set_property(TARGET ${PROJECT_NAME} PROPERTY BUILD_RPATH
-        "$ORIGIN"
-        "$ORIGIN/plugins"
-    )
-
+    # Add release VCPKG library directories to build RPATH
     if(EXISTS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
-        set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY BUILD_RPATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+        list(APPEND BUILD_RPATH_LIST "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
     endif()
 
+    # Add debug VCPKG library directories to build RPATH
     if(EXISTS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
-        set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY BUILD_RPATH "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
+        list(APPEND BUILD_RPATH_LIST "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib")
     endif()
 
-
+    # Add Qt library directory to build RPATH
     get_target_property(QT_CORE_LIB Qt6::Core IMPORTED_LOCATION)
     if(QT_CORE_LIB)
         get_filename_component(QT_LIB_DIR "${QT_CORE_LIB}" DIRECTORY)
+
+        if(EXISTS "${QT_LIB_DIR}")
+            set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY BUILD_RPATH "${QT_LIB_DIR}")
+            list(APPEND BUILD_RPATH_LIST "${QT_LIB_DIR}")
+        endif()
     endif()
 
-    if(QT_LIB_DIR AND EXISTS "${QT_LIB_DIR}")
-        set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY BUILD_RPATH "${QT_LIB_DIR}")
-    endif()
+    # Set RPATH properties for the executable
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        BUILD_RPATH "${BUILD_RPATH_LIST}"
+        BUILD_RPATH_USE_ORIGIN TRUE
+        BUILD_WITH_INSTALL_RPATH FALSE
+        CMAKE_SKIP_INSTALL_RPATH FALSE
+        INSTALL_RPATH "$ORIGIN"
+        INSTALL_RPATH_USE_LINK_PATH FALSE
+        SKIP_BUILD_RPATH FALSE
+    )
 
-    # Install Qt plugins
+    # Fix RPATH for all copied dynamic libraries in the build directory:
+
+    # Fix RPATH for all Qt plugin libraries in the build directory:
+
+    # Install Qt plugins to plugins subdirectory
     install(
         DIRECTORY "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/Qt6/plugins/"
         DESTINATION "plugins"
         COMPONENT ${PROJECT_NAME}
         FILES_MATCHING PATTERN "*"
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
-    )
-
-    # Install wrapper script
-    install(
-        FILES "${CMAKE_CURRENT_BINARY_DIR}/run_app.sh"
-        DESTINATION "."
-        COMPONENT ${PROJECT_NAME}
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE
     )
 
@@ -375,6 +356,59 @@ elseif(UNIX AND NOT APPLE)
         ]]
         COMPONENT ${PROJECT_NAME}
     )
+
+    # Fix RPATH for all installed dynamic libraries and handle missing dependencies
+    install(CODE "
+        # Handle Qt6XcbQpa.
+        # Xcb plugin is required as a fallback on the isolated systems (like WSL).
+        # The systems where Wayland is not available.
+        if(EXISTS \"${CMAKE_CURRENT_BINARY_DIR}/libQt6XcbQpa.so.6\")
+            file(COPY \"${CMAKE_CURRENT_BINARY_DIR}/libQt6XcbQpa.so.6\" DESTINATION \"\${CMAKE_INSTALL_PREFIX}\")
+        endif()
+
+        file(GLOB INSTALLED_LIBS
+             \"\${CMAKE_INSTALL_PREFIX}/*.so*\")
+        foreach(lib \${INSTALLED_LIBS})
+            if(EXISTS \"\${lib}\" AND NOT IS_SYMLINK \"\${lib}\")
+                execute_process(
+                    COMMAND \${CMAKE_COMMAND} -E echo \"Fixing RPATH for library: \${lib}\"
+                )
+                execute_process(
+                    COMMAND patchelf --set-rpath \"\$ORIGIN\" \"\${lib}\"
+                    RESULT_VARIABLE PATCHELF_RESULT
+                    ERROR_QUIET
+                )
+                if(NOT PATCHELF_RESULT EQUAL 0)
+                    execute_process(
+                        COMMAND \${CMAKE_COMMAND} -E echo \"Warning: Failed to patch RPATH for \${lib}\"
+                    )
+                endif()
+            endif()
+        endforeach()
+    " COMPONENT ${PROJECT_NAME})
+
+    # Fix RPATH for all Qt plugin libraries to point to the application directory
+    install(CODE "
+        file(GLOB_RECURSE QT_PLUGINS
+             \"\${CMAKE_INSTALL_PREFIX}/plugins/*.so*\")
+        foreach(plugin \${QT_PLUGINS})
+            if(EXISTS \"\${plugin}\")
+                execute_process(
+                    COMMAND \${CMAKE_COMMAND} -E echo \"Fixing RPATH for plugin: \${plugin}\"
+                )
+                execute_process(
+                    COMMAND patchelf --set-rpath \"\$ORIGIN/..:$ORIGIN/../..:$ORIGIN\" \"\${plugin}\"
+                    RESULT_VARIABLE PATCHELF_RESULT
+                    ERROR_QUIET
+                )
+                if(NOT PATCHELF_RESULT EQUAL 0)
+                    execute_process(
+                        COMMAND \${CMAKE_COMMAND} -E echo \"Warning: Failed to patch RPATH for \${plugin}\"
+                    )
+                endif()
+            endif()
+        endforeach()
+    " COMPONENT ${PROJECT_NAME})
 endif()
 
 add_subdirectory(cpack)
