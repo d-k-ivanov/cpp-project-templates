@@ -256,6 +256,14 @@ elseif(UNIX AND NOT APPLE)
         COMMENT "Copying Qt plugins to build directory"
     )
 
+    # Fix RPATH for copied VCPKG dynamic libraries in build directory
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND "${CMAKE_COMMAND}"
+        -DCMAKE_CURRENT_BINARY_DIR="$<TARGET_FILE_DIR:${PROJECT_NAME}>"
+        -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/FixBuildRpath.cmake"
+        COMMENT "Fixing RPATH for copied libraries in build directory"
+    )
+
     # Collect build RPATH
     set(BUILD_RPATH_LIST "$ORIGIN")
 
@@ -271,6 +279,7 @@ elseif(UNIX AND NOT APPLE)
 
     # Add Qt library directory to build RPATH
     get_target_property(QT_CORE_LIB Qt6::Core IMPORTED_LOCATION)
+
     if(QT_CORE_LIB)
         get_filename_component(QT_LIB_DIR "${QT_CORE_LIB}" DIRECTORY)
 
@@ -290,10 +299,6 @@ elseif(UNIX AND NOT APPLE)
         INSTALL_RPATH_USE_LINK_PATH FALSE
         SKIP_BUILD_RPATH FALSE
     )
-
-    # Fix RPATH for all copied dynamic libraries in the build directory:
-
-    # Fix RPATH for all Qt plugin libraries in the build directory:
 
     # Install Qt plugins to plugins subdirectory
     install(
