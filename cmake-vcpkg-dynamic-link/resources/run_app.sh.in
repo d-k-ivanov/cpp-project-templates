@@ -1,0 +1,32 @@
+#!/bin/bash
+# Wrapper script to run @PROJECT_NAME@ from any directory
+# This script ensures the application can find its libraries and plugins
+# regardless of the current working directory
+
+# Get the directory where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# Set up library search path to include the application directory
+export LD_LIBRARY_PATH="$SCRIPT_DIR:$LD_LIBRARY_PATH"
+
+# Set up Qt plugin path
+export QT_PLUGIN_PATH="$SCRIPT_DIR/plugins"
+
+# Set QT_QPA_PLATFORM_PLUGIN_PATH as fallback for older Qt versions
+export QT_QPA_PLATFORM_PLUGIN_PATH="$SCRIPT_DIR/plugins/platforms"
+
+# Debug information (uncomment for troubleshooting)
+# echo "Script directory: $SCRIPT_DIR"
+# echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+# echo "QT_PLUGIN_PATH: $QT_PLUGIN_PATH"
+
+# Force XCB platform to avoid Wayland issues in headless environments
+if [ -z "$QT_QPA_PLATFORM" ]; then
+    export QT_QPA_PLATFORM=xcb
+fi
+
+# Change to the application directory to ensure relative paths work
+cd "$SCRIPT_DIR"
+
+# Execute the application with all provided arguments
+exec "$SCRIPT_DIR/@PROJECT_NAME@" "$@"

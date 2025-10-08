@@ -1,0 +1,13 @@
+## IDE
+.idea/
+.vs/
+.vscode/
+
+## Build Folder
+build/
+
+## CMake
+_CPack_Packages/
+
+## Artifacts
+*.zip
