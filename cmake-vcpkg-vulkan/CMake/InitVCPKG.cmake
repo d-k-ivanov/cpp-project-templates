@@ -44,20 +44,23 @@ endif()
 
 mark_as_advanced(FORCE CMAKE_TOOLCHAIN_FILE)
 
-if(NOT DEFINED VCPKG_INSTALLED_DIR)
-    if(EXISTS "${VCPKG_EXPORT_PATH}/installed")
-        set(VCPKG_INSTALLED_DIR "${VCPKG_EXPORT_PATH}/installed" CACHE PATH "Vcpkg installed directory")
-        set(VCPKG_INSTALLED_DIR_NAME "installed" CACHE STRING "Name of vcpkg installed directory")
-    elseif(EXISTS "${VCPKG_EXPORT_PATH}/vcpkg_installed")
-        set(VCPKG_INSTALLED_DIR "${VCPKG_EXPORT_PATH}/vcpkg_installed" CACHE PATH "Vcpkg installed directory")
-        set(VCPKG_INSTALLED_DIR_NAME "vcpkg_installed" CACHE STRING "Name of vcpkg installed directory")
-    else()
-        message(FATAL_ERROR "\nCannot determine vcpkg installed directory!\n")
-    endif()
-
-    mark_as_advanced(FORCE VCPKG_INSTALLED_DIR)
-    mark_as_advanced(FORCE VCPKG_INSTALLED_DIR_NAME)
-endif()
+# ###############################################################################
+# Rewrites VCPKG installed directory to keep it always in the repository
+# Useful in case of multiple projects with the same vcpkg installation
+# ###############################################################################
+# if(NOT DEFINED VCPKG_INSTALLED_DIR)
+#     if(EXISTS "${VCPKG_EXPORT_PATH}/installed")
+#         set(VCPKG_INSTALLED_DIR "${VCPKG_EXPORT_PATH}/installed" CACHE PATH "Vcpkg installed directory")
+#         set(VCPKG_INSTALLED_DIR_NAME "installed" CACHE STRING "Name of vcpkg installed directory")
+#     elseif(EXISTS "${VCPKG_EXPORT_PATH}/vcpkg_installed")
+#         set(VCPKG_INSTALLED_DIR "${VCPKG_EXPORT_PATH}/vcpkg_installed" CACHE PATH "Vcpkg installed directory")
+#         set(VCPKG_INSTALLED_DIR_NAME "vcpkg_installed" CACHE STRING "Name of vcpkg installed directory")
+#     else()
+#         message(FATAL_ERROR "\nCannot determine vcpkg installed directory!\n")
+#     endif()
+#     mark_as_advanced(FORCE VCPKG_INSTALLED_DIR)
+#     mark_as_advanced(FORCE VCPKG_INSTALLED_DIR_NAME)
+# endif()
 
 if(CMAKE_TOOLCHAIN_FILE MATCHES ".*vcpkg\.cmake")
     if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
