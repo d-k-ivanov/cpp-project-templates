@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 option(VERBOSE_OUTPUT OFF)
 
-set(PROJECT_NAME YOUR_FANCY_PROJECT_NAME)
+set(PROJECT_NAME app)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -31,12 +31,12 @@ set(SOURCE_FILES
     # # Main
     src/main.cpp
 
-    src/SomeSourceFile.cpp
-    src/SomeHeaderFile.h
+    # src/SomeSourceFile.cpp
+    # src/SomeHeaderFile.h
 
     # # Shaders
-    resources/shaders/SomeFragmentShader.frag
-    resources/shaders/VertexShader.vert
+    # resources/shaders/SomeFragmentShader.frag
+    # resources/shaders/VertexShader.vert
 )
 source_group("Sources" SOURCE_FILES REGULAR_EXPRESSION ".*\\.(h|cpp)")
 source_group("Shaders" SOURCE_FILES REGULAR_EXPRESSION ".*\\.(glsl|frag|vert)")
